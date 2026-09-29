@@ -28,6 +28,7 @@ const TicTacToe = ({ onBack }) => {
   const peerRef = useRef(null);
   const audioRef = useRef(null);
   const localStreamRef = useRef(null);
+  const iceCandidateQueue = useRef([]);
   const [micActive, setMicActive] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
 
@@ -157,12 +158,16 @@ const TicTacToe = ({ onBack }) => {
       setOpponentName(data.opponentName);
 
       try {
+        iceCandidateQueue.current = [];
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         localStreamRef.current = stream;
         setMicActive(true);
 
         const peer = new RTCPeerConnection({
-          iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
+          iceServers: [
+            { urls: "stun:stun.l.google.com:19302" },
+            { urls: "stun:global.stun.twilio.com:3478" }
+          ]
         });
         peerRef.current = peer;
 
@@ -187,6 +192,11 @@ const TicTacToe = ({ onBack }) => {
         }
       } catch (err) {
         console.error("Mic access denied or error:", err);
+        Swal.fire({
+          icon: 'warning',
+          title: 'Microphone Disabled',
+          text: 'Voice chat will not work because microphone access was denied or not supported.',
+        });
       }
     });
 
@@ -194,15 +204,31 @@ const TicTacToe = ({ onBack }) => {
       const peer = peerRef.current;
       if (!peer) return;
 
-      if (data.type === "offer") {
-        await peer.setRemoteDescription(new RTCSessionDescription(data.offer));
-        const answer = await peer.createAnswer();
-        await peer.setLocalDescription(answer);
-        socket.emit("webrtc_signal", { type: "answer", answer });
-      } else if (data.type === "answer") {
-        await peer.setRemoteDescription(new RTCSessionDescription(data.answer));
-      } else if (data.type === "candidate") {
-        await peer.addIceCandidate(new RTCIceCandidate(data.candidate));
+      try {
+        if (data.type === "offer") {
+          await peer.setRemoteDescription(new RTCSessionDescription(data.offer));
+          const answer = await peer.createAnswer();
+          await peer.setLocalDescription(answer);
+          socket.emit("webrtc_signal", { type: "answer", answer });
+
+          while (iceCandidateQueue.current.length > 0) {
+            await peer.addIceCandidate(iceCandidateQueue.current.shift());
+          }
+        } else if (data.type === "answer") {
+          await peer.setRemoteDescription(new RTCSessionDescription(data.answer));
+
+          while (iceCandidateQueue.current.length > 0) {
+            await peer.addIceCandidate(iceCandidateQueue.current.shift());
+          }
+        } else if (data.type === "candidate") {
+          if (peer.remoteDescription) {
+            await peer.addIceCandidate(new RTCIceCandidate(data.candidate));
+          } else {
+            iceCandidateQueue.current.push(new RTCIceCandidate(data.candidate));
+          }
+        }
+      } catch (err) {
+        console.error("WebRTC Error:", err);
       }
     });
 
