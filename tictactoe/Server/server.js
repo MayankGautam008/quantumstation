@@ -49,6 +49,11 @@ io.on("connection", (socket) => {
     if (opp) opp.socket.emit("webrtc_signal", data);
   });
 
+  socket.on("restart_match", () => {
+    const opp = getOpponent(socket.id);
+    if (opp) opp.socket.emit("match_restarted");
+  });
+
   socket.on("create_room", (data) => {
     const currentUser = allUsers[socket.id];
     currentUser.playerName = data.playerName;

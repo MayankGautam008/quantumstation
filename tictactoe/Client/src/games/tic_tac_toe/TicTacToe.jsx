@@ -5,14 +5,14 @@ import { io } from "socket.io-client";
 import Swal from "sweetalert2";
 import Confetti from "react-confetti";
 
-const renderFrom = [
+const getInitialGameState = () => [
   [1, 2, 3],
   [4, 5, 6],
   [7, 8, 9],
 ];
 
 const TicTacToe = ({ onBack }) => {
-  const [gameState, setGameState] = useState(renderFrom);
+  const [gameState, setGameState] = useState(getInitialGameState());
   const [currentPlayer, setCurrentPlayer] = useState("circle");
   const [finishedState, setFinishetState] = useState(false);
   const [finishedArrayState, setFinishedArrayState] = useState([]);
@@ -116,6 +116,14 @@ const TicTacToe = ({ onBack }) => {
     socket.off("room_join_error");
     socket.off("webrtc_signal");
     socket.off("chat_message");
+    socket.off("match_restarted");
+
+    socket.on("match_restarted", () => {
+      setGameState(getInitialGameState());
+      setCurrentPlayer("circle");
+      setFinishetState(false);
+      setFinishedArrayState([]);
+    });
 
     socket.on("opponentLeftMatch", () => {
       setFinishetState("opponentLeftMatch");
@@ -379,6 +387,15 @@ const TicTacToe = ({ onBack }) => {
     onBack();
   };
 
+  const handleRestart = () => {
+    socket.emit("restart_match");
+    // Also reset local game state instantly
+    setGameState(getInitialGameState());
+    setCurrentPlayer("circle");
+    setFinishetState(false);
+    setFinishedArrayState([]);
+  };
+
   if (!playOnline) {
     return (
       <div className="setup-container">
@@ -476,12 +493,24 @@ const TicTacToe = ({ onBack }) => {
                     Note: You have to be thankful to a legendary genius, Mayank, for making this game, and he's the reason behind your celebration here 😂😂
                   </p>
                 )}
+                <div style={{ marginTop: '30px', textAlign: 'center' }}>
+                  <button onClick={handleRestart} className="btn-modern" style={{ fontSize: '1.2rem', padding: '10px 20px', background: '#0ff', color: '#000' }}>
+                    🔄 Play Again
+                  </button>
+                </div>
               </>
             )}
           {finishedState &&
             finishedState !== "opponentLeftMatch" &&
             finishedState === "draw" && (
-              <h3 className="finished-state">It's a Draw</h3>
+              <div style={{ textAlign: 'center' }}>
+                <h3 className="finished-state">It's a Draw</h3>
+                <div style={{ marginTop: '30px' }}>
+                  <button onClick={handleRestart} className="btn-modern" style={{ fontSize: '1.2rem', padding: '10px 20px', background: '#0ff', color: '#000' }}>
+                    🔄 Play Again
+                  </button>
+                </div>
+              </div>
             )}
         </div>
         {!finishedState && opponentName && (

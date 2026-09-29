@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Square.css";
 
 const circleSvg = (
@@ -55,8 +55,6 @@ const Square = ({
   currentPlayer,
   setCurrentPlayer,
 }) => {
-  const [icon, setIcon] = useState(null);
-
   const clickOnSquare = () => {
     if (playingAs !== currentPlayer) {
       return;
@@ -66,13 +64,7 @@ const Square = ({
       return;
     }
 
-    if (!icon) {
-      if (currentPlayer === "circle") {
-        setIcon(circleSvg);
-      } else {
-        setIcon(crossSvg);
-      }
-
+    if (typeof currentElement === "number") {
       const myCurrentPlayer = currentPlayer;
       socket.emit("playerMoveFromClient", {
         state: {
@@ -106,7 +98,7 @@ const Square = ({
         ? circleSvg
         : currentElement === "cross"
         ? crossSvg
-        : icon}
+        : null}
     </div>
   );
 };
