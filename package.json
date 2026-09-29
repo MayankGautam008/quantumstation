@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Quantum Station Gaming Platform",
   "scripts": {
-    "build": "cd Client && npm install && npm run build && cd ../Server && npm install",
-    "start": "cd Server && node server.js"
+    "build": "cd tictactoe/Client && npm install && npm run build && cd ../../tictactoe/Server && npm install",
+    "start": "cd tictactoe/Server && node server.js"
   }
 }
