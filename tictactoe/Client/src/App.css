@@ -197,3 +197,197 @@ body {
   text-align: center;
   text-shadow: 0 0 15px #0ff;
 }
+
+/* TicTacToe Layout Classes */
+.main-container {
+  display: flex;
+  width: 100vw;
+  min-height: 100vh;
+  background: #0b0f19;
+  color: white;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.main-div {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.exit-btn {
+  position: absolute;
+  top: -60px;
+  left: 0;
+  background: transparent;
+  color: #f0f;
+  border: 1px solid #f0f;
+  padding: 5px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.setup-buttons {
+  display: flex;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.game-heading {
+  margin-bottom: 20px;
+}
+
+.opponent-status {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.chat-box {
+  width: 300px;
+  height: 500px;
+  background: rgba(0, 40, 60, 0.9);
+  border: 1px solid #0ff;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-header {
+  padding: 15px;
+  border-bottom: 1px solid #0ff;
+  font-weight: bold;
+  color: #0ff;
+  text-align: center;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chat-message {
+  padding: 8px 12px;
+  border-radius: 15px;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.chat-message.sent {
+  align-self: flex-end;
+  background: #0ff;
+  color: #000;
+}
+
+.chat-message.received {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.chat-form {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #0ff;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 10px;
+  background: transparent;
+  border: none;
+  color: white;
+  outline: none;
+}
+
+.chat-submit {
+  background: #0ff;
+  color: #000;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+/* Mobile Responsiveness */
+@media screen and (max-width: 768px) {
+  .landing-title {
+    font-size: 3rem;
+  }
+  
+  .landing-subtitle {
+    font-size: 1rem;
+    letter-spacing: 5px;
+  }
+
+  .setup-buttons {
+    flex-direction: column;
+    gap: 15px;
+    width: 80%;
+  }
+
+  .btn-modern {
+    width: 100%;
+    font-size: 1.2rem;
+  }
+
+  .main-container {
+    flex-direction: column;
+    height: auto;
+    gap: 30px;
+    padding-top: 80px;
+  }
+
+  .exit-btn {
+    top: -70px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .move-detection {
+    width: 100%;
+    max-width: 320px;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .left, .right {
+    text-align: center;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .game-heading {
+    font-size: 2.5rem;
+  }
+
+  .square-wrapper {
+    grid-template-columns: repeat(3, 90px);
+    grid-template-rows: repeat(3, 90px);
+    gap: 5px;
+  }
+
+  .square svg {
+    width: 50px;
+    height: 50px;
+  }
+
+  .chat-box {
+    width: 100%;
+    max-width: 320px;
+    height: 400px;
+  }
+}
+

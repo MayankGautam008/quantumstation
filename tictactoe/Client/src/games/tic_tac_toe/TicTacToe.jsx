@@ -357,7 +357,7 @@ const TicTacToe = ({ onBack }) => {
     return (
       <div className="setup-container">
         <h1 className="landing-title">Zero - Kata</h1>
-        <div style={{ display: 'flex', gap: '30px', marginTop: '20px' }}>
+        <div className="setup-buttons">
           <button onClick={createRoomClick} className="btn-modern">
             Create Room
           </button>
@@ -373,13 +373,13 @@ const TicTacToe = ({ onBack }) => {
   }
 
   return (
-    <div className="main-container" style={{ display: 'flex', width: '100vw', height: '100vh', background: '#0b0f19', color: 'white', alignItems: 'center', justifyContent: 'center', gap: '50px' }}>
+    <div className="main-container">
       
       {/* Remote Audio */}
       <audio ref={audioRef} autoPlay />
 
-      <div className="main-div" style={{ marginTop: 0, position: 'relative' }}>
-        <button onClick={handleExit} style={{ position: 'absolute', top: '-60px', left: 0, background: 'transparent', color: '#f0f', border: '1px solid #f0f', padding: '5px 15px', borderRadius: '5px', cursor: 'pointer', fontFamily: 'Courier New' }}>
+      <div className="main-div">
+        <button className="exit-btn" onClick={handleExit}>
           ← Exit Game
         </button>
         
@@ -410,7 +410,7 @@ const TicTacToe = ({ onBack }) => {
           </div>
         </div>
         <div>
-          <h1 className="game-heading water-background" style={{ marginBottom: '20px' }}>Tic Tac Toe</h1>
+          <h1 className="game-heading water-background">Tic Tac Toe</h1>
           {playOnline && !opponentName && roomId && (
             <h2 style={{ textAlign: 'center', marginBottom: '15px' }}>Room ID: {roomId}</h2>
           )}
@@ -459,36 +459,36 @@ const TicTacToe = ({ onBack }) => {
             )}
         </div>
         {!finishedState && opponentName && (
-          <h2 style={{ marginTop: '20px' }}>You are playing against {opponentName}</h2>
+          <h2 className="opponent-status">You are playing against {opponentName}</h2>
         )}
         {finishedState && finishedState === "opponentLeftMatch" && (
-          <h2 style={{ marginTop: '20px' }}>You won the match, Opponent has left</h2>
+          <h2 className="opponent-status">You won the match, Opponent has left</h2>
         )}
       </div>
 
       {/* Chat Section */}
       {opponentName && (
-        <div className="chat-box" style={{ width: '300px', height: '500px', background: 'rgba(0, 40, 60, 0.9)', border: '1px solid #0ff', borderRadius: '10px', display: 'flex', flexDirection: 'column' }}>
-          <div className="chat-header" style={{ padding: '15px', borderBottom: '1px solid #0ff', fontWeight: 'bold', color: '#0ff', textAlign: 'center' }}>
+        <div className="chat-box">
+          <div className="chat-header">
             Room Chat
           </div>
-          <div className="chat-messages" style={{ flex: 1, padding: '15px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div className="chat-messages">
             {messages.map((m, i) => (
-              <div key={i} style={{ alignSelf: m.sender === "You" ? 'flex-end' : 'flex-start', background: m.sender === "You" ? '#0ff' : 'rgba(255,255,255,0.1)', color: m.sender === "You" ? '#000' : '#fff', padding: '8px 12px', borderRadius: '15px', maxWidth: '80%', wordWrap: 'break-word' }}>
+              <div key={i} className={`chat-message ${m.sender === "You" ? 'sent' : 'received'}`}>
                 <div style={{ fontSize: '10px', opacity: 0.7, marginBottom: '4px' }}>{m.sender}</div>
                 <div>{m.text}</div>
               </div>
             ))}
           </div>
-          <form onSubmit={sendChatMessage} style={{ display: 'flex', padding: '10px', borderTop: '1px solid #0ff' }}>
+          <form onSubmit={sendChatMessage} className="chat-form">
             <input 
               type="text" 
               value={chatInput} 
               onChange={(e) => setChatInput(e.target.value)} 
               placeholder="Type message..." 
-              style={{ flex: 1, padding: '10px', background: 'transparent', border: 'none', color: 'white', outline: 'none' }}
+              className="chat-input"
             />
-            <button type="submit" style={{ background: '#0ff', color: '#000', border: 'none', padding: '10px 15px', cursor: 'pointer', borderRadius: '5px', fontWeight: 'bold' }}>Send</button>
+            <button type="submit" className="chat-submit">Send</button>
           </form>
         </div>
       )}
