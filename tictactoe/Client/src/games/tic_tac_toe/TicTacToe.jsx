@@ -118,11 +118,14 @@ const TicTacToe = ({ onBack }) => {
     socket.off("chat_message");
     socket.off("match_restarted");
 
-    socket.on("match_restarted", () => {
+    socket.on("match_restarted", (data) => {
       setGameState(getInitialGameState());
       setCurrentPlayer("circle");
       setFinishetState(false);
       setFinishedArrayState([]);
+      if (data && data.playingAs) {
+        setPlayingAs(data.playingAs);
+      }
     });
 
     socket.on("opponentLeftMatch", () => {
@@ -389,11 +392,6 @@ const TicTacToe = ({ onBack }) => {
 
   const handleRestart = () => {
     socket.emit("restart_match");
-    // Also reset local game state instantly
-    setGameState(getInitialGameState());
-    setCurrentPlayer("circle");
-    setFinishetState(false);
-    setFinishedArrayState([]);
   };
 
   if (!playOnline) {

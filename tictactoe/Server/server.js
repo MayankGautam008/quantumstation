@@ -50,8 +50,18 @@ io.on("connection", (socket) => {
   });
 
   socket.on("restart_match", () => {
-    const opp = getOpponent(socket.id);
-    if (opp) opp.socket.emit("match_restarted");
+    const currentUser = allUsers[socket.id];
+    if (!currentUser || !currentUser.room) return;
+    const room = allRooms[currentUser.room];
+    
+    if (room && room.player1 && room.player2) {
+      const isPlayer1First = Math.random() > 0.5;
+      const player1Sign = isPlayer1First ? "circle" : "cross";
+      const player2Sign = isPlayer1First ? "cross" : "circle";
+
+      room.player1.socket.emit("match_restarted", { playingAs: player1Sign });
+      room.player2.socket.emit("match_restarted", { playingAs: player2Sign });
+    }
   });
 
   socket.on("create_room", (data) => {
